@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'amount' => $paymentForDeal,
                 'payment_method' => $paymentMethod,
                 'payment_date' => $paymentDate,
-                'notes' => $notes ? $notes . ' (গ্রাহকের সম্মিলিত বাকি থেকে)' : 'গ্রাহকের সম্মিলিত বাকি থেকে পরিশোধ'
+                'notes' => $notes ? $notes . ' (' . __('payment_from_customer_due') . ')' : __('payment_from_customer_due')
             ]);
             
             if ($result) {
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setFlashMessage('success', __('payment_recorded') . ' (' . formatCurrency($amount) . ')');
             redirect('customer-view.php?id=' . $customerId);
         } else {
-            $errors[] = 'পেমেন্ট রেকর্ড করতে ব্যর্থ হয়েছে।';
+            $errors[] = __('payment_failed');
         }
     }
 }

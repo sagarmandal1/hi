@@ -93,7 +93,7 @@ $allDeals = $dealModel->getAll();
         <div>
             <i class="bi bi-info-circle me-2"></i>
             <strong><?php _e('pay_against_customer'); ?>?</strong> 
-            গ্রাহকের সকল বাকি একত্রে দেখতে এবং যেকোনো পরিমাণ পরিশোধ করতে চাইলে
+            <?php _e('customer_payment_info'); ?>
         </div>
         <a href="customer-payment.php" class="btn btn-warning">
             <i class="bi bi-person-check me-2"></i><?php _e('pay_against_customer'); ?>
@@ -201,16 +201,17 @@ $allDeals = $dealModel->getAll();
 
 <?php
 $symbol = CURRENCY_SYMBOL;
-$extraScripts = <<<SCRIPT
+?>
 <script>
 function updateDealInfo(select) {
     const option = select.options[select.selectedIndex];
     const card = document.getElementById('dealInfoCard');
+    const symbol = '<?php echo $symbol; ?>';
     
     if (option.value) {
         document.getElementById('infoCustomer').textContent = option.dataset.customer;
-        document.getElementById('infoSell').textContent = '{$symbol}' + parseFloat(option.dataset.sell).toFixed(2);
-        document.getElementById('infoDue').textContent = '{$symbol}' + parseFloat(option.dataset.due).toFixed(2);
+        document.getElementById('infoSell').textContent = symbol + parseFloat(option.dataset.sell).toFixed(2);
+        document.getElementById('infoDue').textContent = symbol + parseFloat(option.dataset.due).toFixed(2);
         document.getElementById('amount').value = parseFloat(option.dataset.due).toFixed(2);
         card.style.display = 'block';
     } else {
@@ -218,7 +219,5 @@ function updateDealInfo(select) {
     }
 }
 </script>
-SCRIPT;
-?>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

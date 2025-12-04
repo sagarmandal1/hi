@@ -201,6 +201,11 @@ $lang = [
     'php_errors' => 'PHP ত্রুটি',
     'no_errors' => 'কোন ত্রুটি নেই',
     'debug_mode' => 'ডিবাগ মোড',
+    
+    // Additional messages
+    'customer_payment_info' => 'গ্রাহকের সকল বাকি একত্রে দেখতে এবং যেকোনো পরিমাণ পরিশোধ করতে চাইলে',
+    'payment_failed' => 'পেমেন্ট রেকর্ড করতে ব্যর্থ হয়েছে।',
+    'payment_from_customer_due' => 'গ্রাহকের সম্মিলিত বাকি থেকে পরিশোধ',
 ];
 
 /**
