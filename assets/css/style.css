@@ -1,0 +1,242 @@
+/* Customer & Real-Time Trading Management System - Custom Styles */
+
+/* General Styles */
+.page-header {
+    margin-bottom: 25px;
+}
+
+.page-header h4 {
+    margin-bottom: 5px;
+}
+
+.page-header p {
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+/* Card Enhancements */
+.card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.card-icon.bg-primary {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.card-icon.bg-success {
+    background: linear-gradient(135deg, #27ae60, #1e8449);
+}
+
+.card-icon.bg-danger {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.card-icon.bg-warning {
+    background: linear-gradient(135deg, #f39c12, #d68910);
+}
+
+.card-icon.bg-info {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+}
+
+/* Stats Cards */
+.stats-card {
+    transition: transform 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.stats-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.stats-label {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+/* Table Styles */
+.table-responsive {
+    border-radius: 10px;
+}
+
+.table thead th {
+    border-top: none;
+    font-weight: 600;
+    color: #2c3e50;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Status Badges */
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+}
+
+.badge-status-pending {
+    background-color: #f39c12;
+    color: white;
+}
+
+.badge-status-completed {
+    background-color: #27ae60;
+    color: white;
+}
+
+.badge-status-cancelled {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* Form Styles */
+.form-label {
+    font-weight: 500;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Deal Item Row */
+.deal-item-row {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.deal-item-row .form-control {
+    font-size: 0.875rem;
+}
+
+/* Action Buttons */
+.btn-action {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.btn-action i {
+    font-size: 0.875rem;
+}
+
+/* Customer Profile */
+.customer-profile-card {
+    text-align: center;
+    padding: 30px;
+}
+
+.customer-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2.5rem;
+    margin: 0 auto 20px;
+}
+
+/* Report Filters */
+.filter-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Dashboard Charts */
+.chart-container {
+    position: relative;
+    height: 300px;
+}
+
+/* Login Page */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+}
+
+.login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-logo i {
+    font-size: 3rem;
+    color: #3498db;
+}
+
+.login-logo h3 {
+    margin-top: 10px;
+    color: #2c3e50;
+}
+
+/* Print Styles */
+@media print {
+    .sidebar,
+    .navbar-top,
+    .btn,
+    .toggle-sidebar {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .stats-card .stats-value {
+        font-size: 1.25rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+    
+    .deal-item-row {
+        padding: 10px;
+    }
+}
