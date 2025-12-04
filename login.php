@@ -89,8 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </form>
             
+            <!-- Demo credentials - Remove in production -->
             <div class="mt-4 text-center text-muted small">
-                <p>Default Login: admin@example.com / admin123</p>
+                <p><em>Demo:</em> admin@example.com / admin123</p>
+                <p class="small text-danger">⚠️ Change credentials after deployment!</p>
             </div>
         </div>
     </div>

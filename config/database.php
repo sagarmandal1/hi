@@ -2,9 +2,12 @@
 /**
  * Database Configuration
  * Customer & Real-Time Trading Management System
+ * 
+ * IMPORTANT: For production, consider using environment variables
+ * or a separate config file outside the web root.
  */
 
-// Database credentials
+// Database credentials - Update these for your environment
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'fortestt_freelance');
 define('DB_USER', 'fortestt_freelance2');

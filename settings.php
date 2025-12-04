@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
                 <strong>Using phpMyAdmin:</strong>
                 <ul>
                     <li>Log in to phpMyAdmin</li>
-                    <li>Select the database: <code>fortestt_freelance</code></li>
+                    <li>Select your database</li>
                     <li>Click on "Export" tab</li>
                     <li>Choose "Quick" export method and SQL format</li>
                     <li>Click "Go" to download the backup file</li>
@@ -155,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
             </li>
             <li class="mt-3">
                 <strong>Using Command Line (mysqldump):</strong>
-                <pre class="bg-light p-3 rounded"><code>mysqldump -u fortestt_freelance2 -p fortestt_freelance > backup_$(date +%Y%m%d).sql</code></pre>
+                <pre class="bg-light p-3 rounded"><code>mysqldump -u [username] -p [database_name] > backup_$(date +%Y%m%d).sql</code></pre>
             </li>
         </ol>
         <div class="alert alert-warning mt-3">
@@ -195,8 +195,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
                         <td><?php echo SITE_NAME; ?></td>
                     </tr>
                     <tr>
-                        <th>Database Name:</th>
-                        <td><?php echo DB_NAME; ?></td>
+                        <th>Database:</th>
+                        <td>Connected</td>
                     </tr>
                     <tr>
                         <th>Current Time:</th>
