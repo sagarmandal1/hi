@@ -34,11 +34,20 @@ function isValidEmail($email) {
  * @param string $url
  */
 function redirect($url) {
-    // Clean output buffer to prevent "headers already sent" error
-    while (ob_get_level()) {
+    // Try to clean output buffer first
+    while (ob_get_level() > 0) {
         ob_end_clean();
     }
-    header("Location: $url");
+    
+    // Check if headers can be sent
+    if (!headers_sent()) {
+        header("Location: $url");
+        exit;
+    }
+    
+    // Fallback: use JavaScript and meta refresh if headers already sent
+    echo '<script type="text/javascript">window.location.href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '";</script>';
+    echo '<noscript><meta http-equiv="refresh" content="0;url=' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '"></noscript>';
     exit;
 }
 
