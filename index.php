@@ -4,9 +4,13 @@
  * Customer & Real-Time Trading Management System
  */
 
+// Check login before including header (which outputs HTML)
+session_start();
+require_once __DIR__ . '/includes/functions.php';
+requireLogin();
+
 $pageTitle = 'Dashboard';
 require_once __DIR__ . '/includes/header.php';
-requireLogin();
 
 require_once __DIR__ . '/models/DealModel.php';
 require_once __DIR__ . '/models/CustomerModel.php';
