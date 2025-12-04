@@ -1,0 +1,275 @@
+<?php
+/**
+ * Header Template
+ * Customer & Real-Time Trading Management System
+ * বাংলাদেশের জন্য কাস্টমার ও ট্রেডিং ম্যানেজমেন্ট সিস্টেম
+ */
+
+// Start output buffering FIRST - before any other code
+ob_start();
+
+// Start session if not started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Include required files
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/functions.php';
+
+// Set page title
+$pageTitle = $pageTitle ?? SITE_NAME;
+?>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo sanitize($pageTitle); ?></title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Google Fonts for Bengali -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="assets/css/style.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --sidebar-width: 250px;
+        }
+        
+        body {
+            font-family: 'Noto Sans Bengali', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: var(--primary-color);
+            padding-top: 20px;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .logo {
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .navbar-top {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 10px;
+        }
+        
+        .card-header {
+            background: white;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+        
+        .stats-card {
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .stats-card.success {
+            border-left-color: var(--success-color);
+        }
+        
+        .stats-card.danger {
+            border-left-color: var(--danger-color);
+        }
+        
+        .stats-card.warning {
+            border-left-color: var(--warning-color);
+        }
+        
+        .btn-primary {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+            border-color: #2980b9;
+        }
+        
+        .table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .badge-pending {
+            background: var(--warning-color);
+        }
+        
+        .badge-completed {
+            background: var(--success-color);
+        }
+        
+        .badge-cancelled {
+            background: var(--danger-color);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            
+            .sidebar.active {
+                width: var(--sidebar-width);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        
+        .toggle-sidebar {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .toggle-sidebar {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <?php if (isLoggedIn()): ?>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="logo">
+            <h4><i class="bi bi-graph-up-arrow"></i> TMS</h4>
+            <small><?php _e('site_name'); ?></small>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>" href="index.php">
+                    <i class="bi bi-speedometer2"></i> <?php _e('dashboard'); ?>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'customers.php' ? 'active' : ''; ?>" href="customers.php">
+                    <i class="bi bi-people"></i> <?php _e('customers'); ?>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>" href="products.php">
+                    <i class="bi bi-box-seam"></i> <?php _e('products'); ?>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'deals.php' ? 'active' : ''; ?>" href="deals.php">
+                    <i class="bi bi-cart-check"></i> <?php _e('deals'); ?>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'payments.php' ? 'active' : ''; ?>" href="payments.php">
+                    <i class="bi bi-credit-card"></i> <?php _e('payments'); ?>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'expenses.php' ? 'active' : ''; ?>" href="expenses.php">
+                    <i class="bi bi-wallet2"></i> <?php _e('expenses'); ?>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'active' : ''; ?>" href="reports.php">
+                    <i class="bi bi-bar-chart"></i> <?php _e('reports'); ?>
+                </a>
+            </li>
+            <hr style="border-color: rgba(255,255,255,0.2); margin: 10px 20px;">
+            <li class="nav-item">
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>" href="settings.php">
+                    <i class="bi bi-gear"></i> <?php _e('settings'); ?>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="logout.php">
+                    <i class="bi bi-box-arrow-right"></i> <?php _e('logout'); ?>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Navigation -->
+        <div class="navbar-top d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <button class="btn toggle-sidebar me-3" onclick="toggleSidebar()">
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <h5 class="mb-0"><?php echo sanitize($pageTitle); ?></h5>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="me-3">
+                    <i class="bi bi-person-circle"></i>
+                    <?php echo sanitize($_SESSION['user_name'] ?? 'User'); ?>
+                </span>
+                <a href="logout.php" class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- PHP Errors (Debug Mode) -->
+        <?php displayPHPErrors(); ?>
+        
+        <!-- Flash Messages -->
+        <?php displayFlashMessage(); ?>
+    <?php endif; ?>
