@@ -34,6 +34,10 @@ function isValidEmail($email) {
  * @param string $url
  */
 function redirect($url) {
+    // Clean output buffer to prevent "headers already sent" error
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
     header("Location: $url");
     exit;
 }

@@ -5,6 +5,11 @@
  * বাংলাদেশের জন্য কাস্টমার ও ট্রেডিং ম্যানেজমেন্ট সিস্টেম
  */
 
+// Start output buffering to prevent "headers already sent" errors
+if (!ob_get_level()) {
+    ob_start();
+}
+
 // Start session if not started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
