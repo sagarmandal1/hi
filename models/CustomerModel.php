@@ -156,18 +156,25 @@ class CustomerModel {
         $stmt = $this->db->query("
             SELECT 
                 c.*,
-                COALESCE(SUM(d.total_sell_amount), 0) as total_sell,
-                COALESCE((
-                    SELECT SUM(p.amount) 
-                    FROM payments p 
-                    WHERE p.customer_id = c.id AND p.deleted_at IS NULL
-                ), 0) as total_paid
+                COALESCE(deal_totals.total_sell, 0) as total_sell,
+                COALESCE(payment_totals.total_paid, 0) as total_paid,
+                (COALESCE(deal_totals.total_sell, 0) - COALESCE(payment_totals.total_paid, 0)) as total_due
             FROM customers c
-            LEFT JOIN deals d ON d.customer_id = c.id AND d.deleted_at IS NULL AND d.status != 'cancelled'
+            LEFT JOIN (
+                SELECT customer_id, SUM(total_sell_amount) as total_sell
+                FROM deals 
+                WHERE deleted_at IS NULL AND status != 'cancelled'
+                GROUP BY customer_id
+            ) deal_totals ON deal_totals.customer_id = c.id
+            LEFT JOIN (
+                SELECT customer_id, SUM(amount) as total_paid
+                FROM payments 
+                WHERE deleted_at IS NULL
+                GROUP BY customer_id
+            ) payment_totals ON payment_totals.customer_id = c.id
             WHERE c.deleted_at IS NULL
-            GROUP BY c.id
-            HAVING total_sell > total_paid
-            ORDER BY (total_sell - total_paid) DESC
+            HAVING total_due > 0
+            ORDER BY total_due DESC
         ");
         return $stmt->fetchAll();
     }
