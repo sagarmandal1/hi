@@ -2,7 +2,11 @@
 /**
  * Common Functions
  * Customer & Real-Time Trading Management System
+ * বাংলাদেশের জন্য কাস্টমার ও ট্রেডিং ম্যানেজমেন্ট সিস্টেম
  */
+
+// Include language file
+require_once __DIR__ . '/lang/bn.php';
 
 /**
  * Sanitize input data
@@ -76,12 +80,13 @@ function isAdmin() {
 }
 
 /**
- * Format currency
+ * Format currency (Bangladesh Taka)
  * @param float $amount
  * @return string
  */
 function formatCurrency($amount) {
-    return '$' . number_format((float)$amount, 2);
+    $symbol = defined('CURRENCY_SYMBOL') ? CURRENCY_SYMBOL : '৳';
+    return $symbol . number_format((float)$amount, 2);
 }
 
 /**
@@ -269,4 +274,99 @@ function verifyCSRFToken($token) {
  */
 function csrfField() {
     return '<input type="hidden" name="csrf_token" value="' . generateCSRFToken() . '">';
+}
+
+/**
+ * Display PHP errors section for debugging
+ * Only shows when DEBUG_MODE is enabled
+ */
+function displayErrorSection() {
+    if (!defined('DEBUG_MODE') || !DEBUG_MODE) {
+        return;
+    }
+    
+    $errors = error_get_last();
+    if ($errors) {
+        echo '<div class="alert alert-danger mt-3" role="alert">';
+        echo '<h6><i class="bi bi-exclamation-triangle me-2"></i>' . __('php_errors') . '</h6>';
+        echo '<pre class="mb-0 small">';
+        echo 'Type: ' . $errors['type'] . '<br>';
+        echo 'Message: ' . htmlspecialchars($errors['message']) . '<br>';
+        echo 'File: ' . htmlspecialchars($errors['file']) . '<br>';
+        echo 'Line: ' . $errors['line'];
+        echo '</pre>';
+        echo '</div>';
+    }
+}
+
+/**
+ * Custom error handler for displaying errors on page
+ */
+function customErrorHandler($errno, $errstr, $errfile, $errline) {
+    if (!defined('DEBUG_MODE') || !DEBUG_MODE) {
+        return false;
+    }
+    
+    $errorType = match($errno) {
+        E_ERROR => 'Error',
+        E_WARNING => 'Warning',
+        E_PARSE => 'Parse Error',
+        E_NOTICE => 'Notice',
+        E_CORE_ERROR => 'Core Error',
+        E_CORE_WARNING => 'Core Warning',
+        E_COMPILE_ERROR => 'Compile Error',
+        E_COMPILE_WARNING => 'Compile Warning',
+        E_USER_ERROR => 'User Error',
+        E_USER_WARNING => 'User Warning',
+        E_USER_NOTICE => 'User Notice',
+        E_STRICT => 'Strict',
+        E_RECOVERABLE_ERROR => 'Recoverable Error',
+        E_DEPRECATED => 'Deprecated',
+        E_USER_DEPRECATED => 'User Deprecated',
+        default => 'Unknown Error'
+    };
+    
+    // Store error in session for display
+    if (!isset($_SESSION['php_errors'])) {
+        $_SESSION['php_errors'] = [];
+    }
+    
+    $_SESSION['php_errors'][] = [
+        'type' => $errorType,
+        'message' => $errstr,
+        'file' => $errfile,
+        'line' => $errline
+    ];
+    
+    return false; // Continue with normal error handling
+}
+
+/**
+ * Display stored PHP errors
+ */
+function displayPHPErrors() {
+    if (!defined('DEBUG_MODE') || !DEBUG_MODE) {
+        return;
+    }
+    
+    if (isset($_SESSION['php_errors']) && !empty($_SESSION['php_errors'])) {
+        echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
+        echo '<h6><i class="bi bi-bug me-2"></i>' . __('php_errors') . ' (' . __('debug_mode') . ')</h6>';
+        echo '<ul class="mb-0 small">';
+        foreach ($_SESSION['php_errors'] as $error) {
+            echo '<li><strong>' . $error['type'] . ':</strong> ' . htmlspecialchars($error['message']);
+            echo ' <em>(' . basename($error['file']) . ':' . $error['line'] . ')</em></li>';
+        }
+        echo '</ul>';
+        echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+        echo '</div>';
+        
+        // Clear errors after display
+        $_SESSION['php_errors'] = [];
+    }
+}
+
+// Set custom error handler if in debug mode
+if (defined('DEBUG_MODE') && DEBUG_MODE) {
+    set_error_handler('customErrorHandler');
 }

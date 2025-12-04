@@ -70,11 +70,16 @@ $payments = $paymentModel->getByCustomer($id);
                 
                 <div class="mt-4">
                     <a href="customer-edit.php?id=<?php echo $id; ?>" class="btn btn-primary btn-sm">
-                        <i class="bi bi-pencil me-2"></i>Edit
+                        <i class="bi bi-pencil me-2"></i><?php _e('edit'); ?>
                     </a>
                     <a href="deal-add.php?customer_id=<?php echo $id; ?>" class="btn btn-outline-primary btn-sm">
-                        <i class="bi bi-plus-circle me-2"></i>New Deal
+                        <i class="bi bi-plus-circle me-2"></i><?php _e('new_deal'); ?>
                     </a>
+                    <?php if ($stats['total_due'] > 0): ?>
+                    <a href="customer-payment.php?customer_id=<?php echo $id; ?>" class="btn btn-success btn-sm">
+                        <i class="bi bi-credit-card me-2"></i><?php _e('pay_against_customer'); ?>
+                    </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

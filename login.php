@@ -1,6 +1,7 @@
 <?php
 /**
  * Login Page
+ * লগইন পেজ
  * Customer & Real-Time Trading Management System
  */
 
@@ -23,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     if (empty($email) || empty($password)) {
-        $error = 'Please enter both email and password.';
+        $error = __('invalid_credentials');
     } else {
         $userModel = new UserModel();
         $user = $userModel->findByEmail($email);
@@ -38,37 +39,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: index.php');
             exit;
         } else {
-            $error = 'Invalid email or password.';
+            $error = __('invalid_credentials');
         }
     }
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Trading Management System</title>
+    <title><?php _e('login'); ?> - <?php _e('site_name'); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans Bengali', sans-serif; }
+    </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-card">
             <div class="login-logo">
                 <i class="bi bi-graph-up-arrow"></i>
-                <h3>Trading Management</h3>
-                <p class="text-muted">Sign in to your account</p>
+                <h3><?php _e('site_name'); ?></h3>
+                <p class="text-muted"><?php _e('sign_in_to_account'); ?></p>
             </div>
             
             <?php if ($error): ?>
                 <div class="alert alert-danger"><?php echo sanitize($error); ?></div>
             <?php endif; ?>
             
+            <?php if (defined('DEBUG_MODE') && DEBUG_MODE): ?>
+                <?php displayPHPErrors(); ?>
+            <?php endif; ?>
+            
             <form method="POST" action="">
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email Address</label>
+                    <label for="email" class="form-label"><?php _e('email'); ?></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                         <input type="email" class="form-control" id="email" name="email" 
@@ -77,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 
                 <div class="mb-4">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label"><?php _e('password'); ?></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
                         <input type="password" class="form-control" id="password" name="password" required>
@@ -85,14 +94,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 
                 <button type="submit" class="btn btn-primary w-100 py-2">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                    <i class="bi bi-box-arrow-in-right me-2"></i><?php _e('sign_in'); ?>
                 </button>
             </form>
             
             <!-- Demo credentials - Remove in production -->
             <div class="mt-4 text-center text-muted small">
                 <p><em>Demo:</em> admin@example.com / admin123</p>
-                <p class="small text-danger">⚠️ Change credentials after deployment!</p>
+                <p class="small text-danger">⚠️ ডিপ্লয়মেন্টের পরে পাসওয়ার্ড পরিবর্তন করুন!</p>
             </div>
         </div>
     </div>

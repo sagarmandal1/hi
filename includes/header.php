@@ -2,6 +2,7 @@
 /**
  * Header Template
  * Customer & Real-Time Trading Management System
+ * বাংলাদেশের জন্য কাস্টমার ও ট্রেডিং ম্যানেজমেন্ট সিস্টেম
  */
 
 // Start session if not started
@@ -17,7 +18,7 @@ require_once __DIR__ . '/functions.php';
 $pageTitle = $pageTitle ?? SITE_NAME;
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,6 +29,9 @@ $pageTitle = $pageTitle ?? SITE_NAME;
     
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Google Fonts for Bengali -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
     <link href="assets/css/style.css" rel="stylesheet">
@@ -43,7 +47,7 @@ $pageTitle = $pageTitle ?? SITE_NAME;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Noto Sans Bengali', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
         }
         
@@ -187,53 +191,53 @@ $pageTitle = $pageTitle ?? SITE_NAME;
     <nav class="sidebar" id="sidebar">
         <div class="logo">
             <h4><i class="bi bi-graph-up-arrow"></i> TMS</h4>
-            <small>Trading Management</small>
+            <small><?php _e('site_name'); ?></small>
         </div>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>" href="index.php">
-                    <i class="bi bi-speedometer2"></i> Dashboard
+                    <i class="bi bi-speedometer2"></i> <?php _e('dashboard'); ?>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'customers.php' ? 'active' : ''; ?>" href="customers.php">
-                    <i class="bi bi-people"></i> Customers
+                    <i class="bi bi-people"></i> <?php _e('customers'); ?>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>" href="products.php">
-                    <i class="bi bi-box-seam"></i> Products
+                    <i class="bi bi-box-seam"></i> <?php _e('products'); ?>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'deals.php' ? 'active' : ''; ?>" href="deals.php">
-                    <i class="bi bi-cart-check"></i> Deals
+                    <i class="bi bi-cart-check"></i> <?php _e('deals'); ?>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'payments.php' ? 'active' : ''; ?>" href="payments.php">
-                    <i class="bi bi-credit-card"></i> Payments
+                    <i class="bi bi-credit-card"></i> <?php _e('payments'); ?>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'expenses.php' ? 'active' : ''; ?>" href="expenses.php">
-                    <i class="bi bi-wallet2"></i> Expenses
+                    <i class="bi bi-wallet2"></i> <?php _e('expenses'); ?>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'reports.php' ? 'active' : ''; ?>" href="reports.php">
-                    <i class="bi bi-bar-chart"></i> Reports
+                    <i class="bi bi-bar-chart"></i> <?php _e('reports'); ?>
                 </a>
             </li>
             <hr style="border-color: rgba(255,255,255,0.2); margin: 10px 20px;">
             <li class="nav-item">
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'active' : ''; ?>" href="settings.php">
-                    <i class="bi bi-gear"></i> Settings
+                    <i class="bi bi-gear"></i> <?php _e('settings'); ?>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="logout.php">
-                    <i class="bi bi-box-arrow-right"></i> Logout
+                    <i class="bi bi-box-arrow-right"></i> <?php _e('logout'); ?>
                 </a>
             </li>
         </ul>
@@ -259,6 +263,9 @@ $pageTitle = $pageTitle ?? SITE_NAME;
                 </a>
             </div>
         </div>
+        
+        <!-- PHP Errors (Debug Mode) -->
+        <?php displayPHPErrors(); ?>
         
         <!-- Flash Messages -->
         <?php displayFlashMessage(); ?>

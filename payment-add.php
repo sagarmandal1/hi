@@ -1,10 +1,11 @@
 <?php
 /**
  * Add Payment Page
+ * পেমেন্ট যোগ করুন
  * Customer & Real-Time Trading Management System
  */
 
-$pageTitle = 'Record Payment';
+$pageTitle = __('record_payment');
 require_once __DIR__ . '/includes/header.php';
 requireLogin();
 
@@ -30,7 +31,7 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verifyCSRFToken($_POST['csrf_token'] ?? '')) {
-        $errors[] = 'Invalid request. Please try again.';
+        $errors[] = __('invalid_request');
     }
 
     $dealId = (int)($_POST['deal_id'] ?? 0);
@@ -41,10 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validation
     if (empty($dealId)) {
-        $errors[] = 'Please select a deal.';
+        $errors[] = __('select_deal_or_customer');
     }
     if ($amount <= 0) {
-        $errors[] = 'Amount must be greater than 0.';
+        $errors[] = __('payment_amount') . ' must be greater than 0';
     }
 
     // Get deal info for customer_id
@@ -64,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         if ($result) {
-            setFlashMessage('success', 'Payment recorded successfully!');
+            setFlashMessage('success', __('payment_recorded'));
             redirect('deal-view.php?id=' . $dealId);
         } else {
             $errors[] = 'Failed to record payment. Please try again.';
@@ -79,11 +80,25 @@ $allDeals = $dealModel->getAll();
 <div class="page-header">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="payments.php">Payments</a></li>
-            <li class="breadcrumb-item active">Record Payment</li>
+            <li class="breadcrumb-item"><a href="payments.php"><?php _e('payments'); ?></a></li>
+            <li class="breadcrumb-item active"><?php _e('record_payment'); ?></li>
         </ol>
     </nav>
-    <h4>Record Payment</h4>
+    <h4><?php _e('record_payment'); ?></h4>
+</div>
+
+<!-- Payment Type Selection -->
+<div class="alert alert-info mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <i class="bi bi-info-circle me-2"></i>
+            <strong><?php _e('pay_against_customer'); ?>?</strong> 
+            গ্রাহকের সকল বাকি একত্রে দেখতে এবং যেকোনো পরিমাণ পরিশোধ করতে চাইলে
+        </div>
+        <a href="customer-payment.php" class="btn btn-warning">
+            <i class="bi bi-person-check me-2"></i><?php _e('pay_against_customer'); ?>
+        </a>
+    </div>
 </div>
 
 <div class="row">
@@ -105,9 +120,9 @@ $allDeals = $dealModel->getAll();
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="deal_id" class="form-label">Deal <span class="text-danger">*</span></label>
+                            <label for="deal_id" class="form-label"><?php _e('deal'); ?> <span class="text-danger">*</span></label>
                             <select class="form-select" id="deal_id" name="deal_id" required onchange="updateDealInfo(this)">
-                                <option value="">Select Deal</option>
+                                <option value=""><?php _e('select_deal_or_customer'); ?></option>
                                 <?php foreach ($allDeals as $deal): 
                                     $dealDue = $deal['total_sell_amount'] - $paymentModel->getTotalPaidForDeal($deal['id']);
                                 ?>
@@ -117,14 +132,14 @@ $allDeals = $dealModel->getAll();
                                             data-due="<?php echo $dealDue; ?>"
                                             <?php echo ($selectedDealId == $deal['id']) ? 'selected' : ''; ?>>
                                         <?php echo sanitize($deal['deal_number']); ?> - <?php echo sanitize($deal['customer_name']); ?>
-                                        (Due: <?php echo formatCurrency($dealDue); ?>)
+                                        (<?php _e('due'); ?>: <?php echo formatCurrency($dealDue); ?>)
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         
                         <div class="col-md-6 mb-3">
-                            <label for="payment_date" class="form-label">Payment Date <span class="text-danger">*</span></label>
+                            <label for="payment_date" class="form-label"><?php _e('payment_date'); ?> <span class="text-danger">*</span></label>
                             <input type="date" class="form-control" id="payment_date" name="payment_date" 
                                    value="<?php echo $_POST['payment_date'] ?? date('Y-m-d'); ?>" required>
                         </div>
@@ -132,35 +147,38 @@ $allDeals = $dealModel->getAll();
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="amount" class="form-label">Amount <span class="text-danger">*</span></label>
+                            <label for="amount" class="form-label"><?php _e('payment_amount'); ?> <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <span class="input-group-text">$</span>
+                                <span class="input-group-text"><?php echo CURRENCY_SYMBOL; ?></span>
                                 <input type="number" step="0.01" min="0.01" class="form-control" id="amount" name="amount" 
                                        value="<?php echo $_POST['amount'] ?? ($selectedDeal ? ($selectedDeal['total_sell_amount'] - $paymentModel->getTotalPaidForDeal($selectedDealId)) : ''); ?>" required>
                             </div>
+                            <small class="text-muted"><?php _e('pay_any_amount'); ?> - <?php _e('full_payment'); ?> বা <?php _e('partial_payment'); ?></small>
                         </div>
                         
                         <div class="col-md-6 mb-3">
-                            <label for="payment_method" class="form-label">Payment Method</label>
+                            <label for="payment_method" class="form-label"><?php _e('payment_method'); ?></label>
                             <select class="form-select" id="payment_method" name="payment_method">
-                                <option value="cash" <?php echo (($_POST['payment_method'] ?? '') === 'cash') ? 'selected' : ''; ?>>Cash</option>
-                                <option value="online" <?php echo (($_POST['payment_method'] ?? '') === 'online') ? 'selected' : ''; ?>>Online</option>
-                                <option value="bank" <?php echo (($_POST['payment_method'] ?? '') === 'bank') ? 'selected' : ''; ?>>Bank Transfer</option>
-                                <option value="other" <?php echo (($_POST['payment_method'] ?? '') === 'other') ? 'selected' : ''; ?>>Other</option>
+                                <option value="cash" <?php echo (($_POST['payment_method'] ?? '') === 'cash') ? 'selected' : ''; ?>><?php _e('cash'); ?></option>
+                                <option value="bkash" <?php echo (($_POST['payment_method'] ?? '') === 'bkash') ? 'selected' : ''; ?>><?php _e('bkash'); ?></option>
+                                <option value="nagad" <?php echo (($_POST['payment_method'] ?? '') === 'nagad') ? 'selected' : ''; ?>>নগদ (Nagad)</option>
+                                <option value="rocket" <?php echo (($_POST['payment_method'] ?? '') === 'rocket') ? 'selected' : ''; ?>><?php _e('rocket'); ?></option>
+                                <option value="bank" <?php echo (($_POST['payment_method'] ?? '') === 'bank') ? 'selected' : ''; ?>><?php _e('bank'); ?></option>
+                                <option value="other" <?php echo (($_POST['payment_method'] ?? '') === 'other') ? 'selected' : ''; ?>><?php _e('other'); ?></option>
                             </select>
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="notes" class="form-label">Notes</label>
+                        <label for="notes" class="form-label"><?php _e('notes'); ?></label>
                         <textarea class="form-control" id="notes" name="notes" rows="2"><?php echo sanitize($_POST['notes'] ?? ''); ?></textarea>
                     </div>
                     
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle me-2"></i>Record Payment
+                            <i class="bi bi-check-circle me-2"></i><?php _e('record_payment'); ?>
                         </button>
-                        <a href="payments.php" class="btn btn-outline-secondary">Cancel</a>
+                        <a href="payments.php" class="btn btn-outline-secondary"><?php _e('cancel'); ?></a>
                     </div>
                 </form>
             </div>
@@ -170,19 +188,20 @@ $allDeals = $dealModel->getAll();
     <div class="col-lg-4">
         <div class="card" id="dealInfoCard" style="<?php echo $selectedDeal ? '' : 'display:none;'; ?>">
             <div class="card-header">
-                <i class="bi bi-info-circle me-2"></i>Deal Information
+                <i class="bi bi-info-circle me-2"></i><?php _e('deal_info'); ?>
             </div>
             <div class="card-body">
-                <p><strong>Customer:</strong> <span id="infoCustomer"><?php echo $selectedDeal ? sanitize($selectedDeal['customer_name']) : ''; ?></span></p>
-                <p><strong>Total Sell:</strong> <span id="infoSell"><?php echo $selectedDeal ? formatCurrency($selectedDeal['total_sell_amount']) : ''; ?></span></p>
-                <p><strong>Due Amount:</strong> <span id="infoDue" class="text-danger"><?php echo $selectedDeal ? formatCurrency($selectedDeal['total_sell_amount'] - $paymentModel->getTotalPaidForDeal($selectedDealId)) : ''; ?></span></p>
+                <p><strong><?php _e('customer'); ?>:</strong> <span id="infoCustomer"><?php echo $selectedDeal ? sanitize($selectedDeal['customer_name']) : ''; ?></span></p>
+                <p><strong><?php _e('total_sell'); ?>:</strong> <span id="infoSell"><?php echo $selectedDeal ? formatCurrency($selectedDeal['total_sell_amount']) : ''; ?></span></p>
+                <p><strong><?php _e('due_amount'); ?>:</strong> <span id="infoDue" class="text-danger"><?php echo $selectedDeal ? formatCurrency($selectedDeal['total_sell_amount'] - $paymentModel->getTotalPaidForDeal($selectedDealId)) : ''; ?></span></p>
             </div>
         </div>
     </div>
 </div>
 
 <?php
-$extraScripts = <<<'SCRIPT'
+$symbol = CURRENCY_SYMBOL;
+$extraScripts = <<<SCRIPT
 <script>
 function updateDealInfo(select) {
     const option = select.options[select.selectedIndex];
@@ -190,8 +209,8 @@ function updateDealInfo(select) {
     
     if (option.value) {
         document.getElementById('infoCustomer').textContent = option.dataset.customer;
-        document.getElementById('infoSell').textContent = '$' + parseFloat(option.dataset.sell).toFixed(2);
-        document.getElementById('infoDue').textContent = '$' + parseFloat(option.dataset.due).toFixed(2);
+        document.getElementById('infoSell').textContent = '{$symbol}' + parseFloat(option.dataset.sell).toFixed(2);
+        document.getElementById('infoDue').textContent = '{$symbol}' + parseFloat(option.dataset.due).toFixed(2);
         document.getElementById('amount').value = parseFloat(option.dataset.due).toFixed(2);
         card.style.display = 'block';
     } else {
